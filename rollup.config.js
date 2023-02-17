@@ -1,10 +1,10 @@
-import buble from "rollup-plugin-buble";
-import pkg from "./package.json";
-import commonjs from "rollup-plugin-commonjs";
-import resolve from "rollup-plugin-node-resolve";
+import buble from "@rollup/plugin-buble";
+import pkg from "./package.json" assert {type: 'json'};// 需要assert {type: 'json'}，否则npm提示异常。
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
 
 import { compile as glslify } from "glslify";
-import * as GLSLX from "glslx";
+import GLSLX from "glslx"; //需要把node_modules中的glslx加上“.js”后缀，否则npm提示异常。
 import { dirname } from "path";
 import { createFilter } from "rollup-pluginutils";
 
@@ -120,23 +120,31 @@ function makeGLSL(userOptions = {}) {
 const plugins = [
   makeGLSL({ include: "./src/shaders/*.glsl" }),
   resolve(),
-  commonjs({
-    namedExports: {
-      "node_modules/mapbox-gl/dist/style-spec/index.js": ["expression"]
-    }
-  }),
-  buble()
+  commonjs(),
+  buble({transforms: { forOf: false }})
 ];
 
 export default [
-  {
-    input: "demo.js",
-    output: [{ file: "docs/index.js", format: "iife" }],
-    plugins
-  },
+  // demo和mapbox一起打包，有异常（i is constant），问了bing，说是commonjs和rollup之间的冲突（可能吧，本也不想这样打包，暂搁置此问题）。
+  // {
+  //   input: "demo.js",
+  //   output: [{ file: "docs/index.js", format: "iife" }],
+  //   plugins
+  // },
   {
     input: "src/index.js",
-    output: [{ file: pkg.browser, format: "umd", name: "windGL" }],
+    output: [
+      { 
+        file: pkg.browser, 
+        format: "umd", 
+        name: "windGL",
+        // style-spec里的.cjs可以在html中通过script直接引用，但其全局变量名是mapboxGlStyleSpecification(是mapbox公司打包的)
+        //如果不配置此globals，windGL打包的.umd.js中的全局变量名默认是styleSpec，使用时都得在引用windGL.umd.js之前设置一下 window.styleSpec = mapboxGlStyleSpecification
+        globals: {
+          "mapbox-gl/dist/style-spec": "mapboxGlStyleSpecification"                                                                     
+        } 
+      }
+    ],
     plugins
   },
   {
@@ -151,7 +159,7 @@ export default [
         format: "es"
       }
     ],
-    external: ["mapbox-gl/dist/style-spec"],
+    external: ["mapbox-gl/dist/style-spec"], // @rollup/plugin-node-resolve 此插件负责这里
     plugins
   }
 ];

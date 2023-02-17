@@ -1,8 +1,6 @@
-import mapboxgl from "mapbox-gl";
-import * as windGL from "./src";
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiYXN0cm9zYXQiLCJhIjoiY2o3YWtjNnJzMGR6ajM3b2FidmNwaDNsaSJ9.lwWi7kOiejlT0RbD7RxtmA";
+  "pk.eyJ1Ijoic2RmMTIzIiwiYSI6ImNsZTRhdXpxdTAxOG8zd3BjczE2OXozNnQifQ.5mqlWWmsMIfvlcE1z8o8aA";
 
 let mapContainer1 = document.getElementById("map1");
 let mapContainer2 = document.getElementById("map2");

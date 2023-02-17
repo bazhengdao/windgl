@@ -2,7 +2,9 @@
 <html>
 <head>
 <title>WebGL wind simulation</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.js"></script>
 </head>
 <style>
 body { margin: 0; padding: 0; overflow: hidden;}
@@ -24,7 +26,8 @@ body { margin: 0; padding: 0; overflow: hidden;}
 <div id="map1" class="map"></div>
 <div id="map2" class="map"></div>
 <button id="next">Next Style</button>
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
-<script src="index.js"></script>
+<script src="../node_modules/mapbox-gl/dist/style-spec/index.cjs"></script>
+<script src="../dist/windgl.umd.js"></script>
+<script src="demo.js"></script>
 </body>
 </html>
